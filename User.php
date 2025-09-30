@@ -1,58 +1,61 @@
 <?php
 
+use Cassandra\UuidInterface;
+
 /**
  * Basic User class for Git operations demonstration
  */
 class User
 {
-    private $id;
-    private $username;
-    private $email;
-    private $createdAt;
+    private UuidInterface $id;
+    private DateTimeInterface $createdAt;
 
-    public function __construct($username, $email)
+    public function __construct(
+        private string $username,
+        private string $email
+    )
     {
-        $this->username = $username;
-        $this->email = $email;
         $this->createdAt = new DateTime();
     }
 
-    public function getId()
+    public function getId(): UuidInterface
     {
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId(UuidInterface $id): void
     {
         $this->id = $id;
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function setUsername($username)
+    public function setUsername(string $username)
     {
         $this->username = $username;
     }
 
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function setEmail($email)
+    public function setEmail(string $email): bool
     {
         $this->email = $email;
+
+        return true;
     }
 
-    public function getCreatedAt()
+    public function getCreatedAt(): DateTime|DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id' => $this->id,
@@ -65,7 +68,7 @@ class User
     /**
      * Validate email format
      */
-    public function validateEmail($email)
+    public function validateEmail(string $email): bool
     {
         return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
     }
@@ -73,7 +76,7 @@ class User
     /**
      * Validate username format
      */
-    public function validateUsername($username)
+    public function validateUsername(string $username): false|int
     {
         // Username should be 3-50 characters, alphanumeric and underscores only
         return preg_match('/^[a-zA-Z0-9_]{3,50}$/', $username);
@@ -81,8 +84,9 @@ class User
 
     /**
      * Get user age from profile (if birthdate is set)
+     * @throws DateMalformedStringException
      */
-    public function getAge($birthdate)
+    public function getAge(string $birthdate): ?int
     {
         if (!$birthdate) {
             return null;
@@ -96,7 +100,7 @@ class User
     /**
      * Check if user is active (logged in recently)
      */
-    public function isActive($lastLoginTime, $thresholdHours = 24)
+    public function isActive($lastLoginTime, $thresholdHours = 24): bool
     {
         if (!$lastLoginTime) {
             return false;
@@ -107,19 +111,5 @@ class User
         $threshold->sub(new DateInterval('PT' . $thresholdHours . 'H'));
 
         return $lastLogin > $threshold;
-    }
-
-    /**
-     * Generate user display name
-     */
-    public function getDisplayName($firstName = null, $lastName = null)
-    {
-        if ($firstName && $lastName) {
-            return trim($firstName . ' ' . $lastName);
-        } elseif ($firstName) {
-            return $firstName;
-        } else {
-            return $this->username;
-        }
     }
 }
