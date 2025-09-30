@@ -1,62 +1,49 @@
 <?php
 
-/**
- * Basic User class for Git operations demonstration
- */
 class User
 {
-    private $id;
-    private $username;
-    private $email;
-    private $createdAt;
+    private string $id;
+    private string $renamedUsernameField;
+    private string $email;
+    private DateTimeImmutable $createdAt;
 
-    public function __construct($username, $email)
-    {
-        $this->username = $username;
+    public function __construct(
+        string $id,
+        string $username,
+        string $email
+    ) {
+        $this->renamedUsernameField = $username;
         $this->email = $email;
-        $this->createdAt = new DateTime();
+        $this->createdAt = new DateTimeImmutable();
+        $this->id = $id;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function setId($id)
+
+    public function getRenamedUsernameField(): string
     {
-        $this->id = $id;
+        return $this->renamedUsernameField;
     }
 
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    public function setUsername($username)
-    {
-        $this->username = $username;
-    }
-
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
-
-    public function getCreatedAt()
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id' => $this->id,
-            'username' => $this->username,
+            'username' => $this->renamedUsernameField,
             'email' => $this->email,
             'created_at' => $this->createdAt->format('Y-m-d H:i:s')
         ];
