@@ -2,15 +2,16 @@
 
 class User
 {
-    private string $id;
+    private readonly string $id;
     private string $renamedUsernameField;
-    private string $email;
+    private Email $email;
     private DateTimeImmutable $createdAt;
 
     public function __construct(
         string $id,
+        private readonly int $age,
         string $username,
-        string $email
+        Email $email
     ) {
         $this->renamedUsernameField = $username;
         $this->email = $email;
@@ -29,7 +30,7 @@ class User
         return $this->renamedUsernameField;
     }
 
-    public function getEmail(): string
+    public function getEmail(): Email
     {
         return $this->email;
     }
